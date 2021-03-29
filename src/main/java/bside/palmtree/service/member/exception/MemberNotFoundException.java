@@ -1,4 +1,4 @@
-package bside.palmtree.service;
+package bside.palmtree.service.member.exception;
 
 /**
  * Created by YHH on 2021/02/15

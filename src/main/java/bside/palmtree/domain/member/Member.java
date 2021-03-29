@@ -5,8 +5,8 @@ import javax.persistence.Entity;
 import javax.persistence.GeneratedValue;
 import javax.persistence.GenerationType;
 import javax.persistence.Id;
-import javax.validation.constraints.Email;
 
+import bside.palmtree.domain.common.BaseTimeEntity;
 import lombok.Builder;
 import lombok.Getter;
 import lombok.NoArgsConstructor;
@@ -21,22 +21,18 @@ import lombok.ToString;
 @Setter
 @ToString
 @Entity
-public class Member {
+public class Member extends BaseTimeEntity {
 	@Id
 	@GeneratedValue(strategy = GenerationType.IDENTITY)
-	@Column(name = "id", nullable = false)
+	@Column(name = "member_id", nullable = false)
 	private Long id;
-
-	@Email
-	@Column(name = "email", nullable = false, unique = true)
-	private String email;
 
 	@Column(name = "name", nullable = false, unique = true)
 	private String name;
 
 	@Builder
-	public Member(String email, String name) {
-		this.email = email;
+	public Member(Long id, String name) {
+		this.id = id;
 		this.name = name;
 	}
 }
