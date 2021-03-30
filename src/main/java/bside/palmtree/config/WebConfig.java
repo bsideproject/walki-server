@@ -38,8 +38,6 @@ public class WebConfig implements WebMvcConfigurer {
 		modelMapper.getConfiguration()
 			.setMatchingStrategy(MatchingStrategies.STRICT);
 
-		modelMapper.addConverter(new LocalDateConverter());
-
 		return modelMapper;
 	}
 }

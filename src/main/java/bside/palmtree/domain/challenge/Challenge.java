@@ -7,6 +7,8 @@ import javax.persistence.Entity;
 import javax.persistence.GeneratedValue;
 import javax.persistence.GenerationType;
 import javax.persistence.Id;
+import javax.validation.constraints.Max;
+import javax.validation.constraints.Min;
 
 import bside.palmtree.domain.common.BaseTimeEntity;
 import bside.palmtree.domain.member.Member;
@@ -36,9 +38,12 @@ public class Challenge extends BaseTimeEntity {
 	@Column(name = "challenge_date", nullable = false)
 	private LocalDate challengeDate;
 
+	@Min(value = 0)
 	@Column(name = "step", nullable = false)
 	private Integer step;
 
+	@Min(value = 200)
+	@Max(value = 10000)
 	@Column(name = "step_goal", nullable = false)
 	private Integer stepGoal;
 
