@@ -1,4 +1,4 @@
-package bside.palmtree.service;
+package bside.palmtree.service.member;
 
 import java.util.Optional;
 
@@ -7,6 +7,7 @@ import org.springframework.transaction.annotation.Transactional;
 
 import bside.palmtree.domain.member.Member;
 import bside.palmtree.domain.member.MemberRepository;
+import bside.palmtree.service.member.exception.MemberNotFoundException;
 import lombok.RequiredArgsConstructor;
 
 /**
@@ -35,9 +36,8 @@ public class MemberService {
 		return false;
 	}
 
-	public Member save(String email, String name) {
+	public Member save(String name) {
 		Member member = Member.builder()
-			.email(email)
 			.name(name)
 			.build();
 
