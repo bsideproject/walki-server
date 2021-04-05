@@ -7,6 +7,9 @@ import org.springframework.context.annotation.Configuration;
 import org.springframework.web.servlet.config.annotation.CorsRegistry;
 import org.springframework.web.servlet.config.annotation.WebMvcConfigurer;
 
+import io.leangen.graphql.ExtensionProvider;
+import io.leangen.graphql.GeneratorConfiguration;
+import io.leangen.graphql.generator.mapping.ArgumentInjector;
 import lombok.RequiredArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
 
@@ -18,10 +21,11 @@ import lombok.extern.slf4j.Slf4j;
 @Configuration
 public class WebConfig implements WebMvcConfigurer {
 
+	private final MemberInjector memberInjector;
+
 	/**
 	 * CORS 설정 모두허용
 	 *
-	 * @param registry
 	 */
 	@Override
 	public void addCorsMappings(CorsRegistry registry) {
@@ -39,5 +43,10 @@ public class WebConfig implements WebMvcConfigurer {
 			.setMatchingStrategy(MatchingStrategies.STRICT);
 
 		return modelMapper;
+	}
+
+	@Bean
+	public ExtensionProvider<GeneratorConfiguration, ArgumentInjector> testArgumentInjectorExtensionProvider() {
+		return (config, current) -> current.prepend(this.memberInjector);
 	}
 }

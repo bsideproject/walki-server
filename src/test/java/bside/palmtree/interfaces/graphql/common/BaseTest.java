@@ -1,12 +1,8 @@
-package bside.palmtree.interfaces.graphql.member;
+package bside.palmtree.interfaces.graphql.common;
 
 import static org.springframework.http.HttpHeaders.*;
 
-import java.util.Collections;
-import java.util.Map;
-
 import org.junit.jupiter.api.BeforeEach;
-import org.junit.jupiter.api.Test;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.boot.configurationprocessor.json.JSONException;
 import org.springframework.boot.configurationprocessor.json.JSONObject;
@@ -14,82 +10,69 @@ import org.springframework.boot.test.autoconfigure.web.reactive.AutoConfigureWeb
 import org.springframework.boot.test.context.SpringBootTest;
 import org.springframework.boot.web.server.LocalServerPort;
 import org.springframework.http.MediaType;
+import org.springframework.test.context.ActiveProfiles;
 import org.springframework.test.web.reactive.server.WebTestClient;
+
+import com.jayway.jsonpath.JsonPath;
 
 import reactor.core.publisher.Mono;
 
 /**
- * Created by YHH on 2021/03/25
+ * Created by YHH on 2021/04/05
  */
+@ActiveProfiles("test")
 @AutoConfigureWebTestClient
 @SpringBootTest(webEnvironment = SpringBootTest.WebEnvironment.RANDOM_PORT)
-class MemberServiceFacadeTest {
+public class BaseTest {
 	@Autowired
-	private WebTestClient webTestClient;
+	protected WebTestClient webTestClient;
 
 	@LocalServerPort
-	private int port;
+	protected int port;
+
+	protected String accessToken;
 
 	@BeforeEach
-	protected void setUp() {
+	protected void setUp() throws Exception {
 		this.webTestClient = WebTestClient.bindToServer()
 			.baseUrl("http://localhost:" + this.port)
 			.defaultHeader(CONTENT_TYPE, MediaType.APPLICATION_JSON_VALUE)
 			.build();
+
+		String signUpQuery = "mutation {"
+			+ "  signUp(social: KAKAO, token: \"0\")"
+			+ "}";
+		this.webTestClient
+			.post()
+			.uri("/graphql")
+			.body(Mono.just(generateRequest(signUpQuery)), String.class)
+			.exchange()
+			.expectStatus()
+			.isOk()
+			.returnResult(String.class)
+			.getResponseBody()
+			.blockFirst();
+
+		String signInQuery = "query {\n"
+			+ "  signIn(social: KAKAO, token: \"0\") {\n"
+			+ "    accessToken\n"
+			+ "  }\n"
+			+ "}";
+		String signInResultJson = this.webTestClient
+			.post()
+			.uri("/graphql")
+			.body(Mono.just(generateRequest(signInQuery)), String.class)
+			.exchange()
+			.expectStatus()
+			.isOk()
+			.returnResult(String.class)
+			.getResponseBody()
+			.blockFirst();
+		System.out.println(signInResultJson);
+		this.accessToken = "Bearer " + JsonPath.parse(signInResultJson).read("$.data.signIn.accessToken");
 	}
 
-	@Test
-	public void crdMember() throws Exception {
-		String putMemberQuery = "mutation {"
-			+ "  putMember(member:{name: \"uni\"}) {"
-			+ "    name"
-			+ "  }"
-			+ "}";
-
-		this.webTestClient
-			.post()
-			.uri("/graphql")
-			.body(Mono.just(generateRequest(putMemberQuery)), String.class)
-			.exchange()
-			.expectStatus()
-			.isOk()
-			.expectBody()
-			.jsonPath("$.data.putMember.name").isEqualTo("uni");
-
-		String getMemberQuery = "query {"
-			+ "  getMember(name: \"uni\") {"
-			+ "    name,"
-			+ "    createdAt,"
-			+ "    updatedAt,"
-			+ "  }"
-			+ "}";
-
-		this.webTestClient
-			.post()
-			.uri("/graphql")
-			.body(Mono.just(generateRequest(getMemberQuery)), String.class)
-			.exchange()
-			.expectStatus()
-			.isOk()
-			.expectBody()
-			.jsonPath("$.data.getMember.name").isEqualTo("uni");
-
-		String deleteMemberQuery = "mutation {"
-			+ "  deleteMember(name: \"uni\")"
-			+ "}";
-
-		this.webTestClient
-			.post()
-			.uri("/graphql")
-			.body(Mono.just(generateRequest(deleteMemberQuery)), String.class)
-			.exchange()
-			.expectStatus()
-			.isOk()
-			.expectBody()
-			.jsonPath("$.data.deleteMember").isEqualTo(true);
-	}
-
-	private String generateRequest(String query) throws JSONException {
+	protected String generateRequest(String query) throws JSONException {
 		JSONObject jsonObject = new JSONObject();
 
 		jsonObject.put("query", query);

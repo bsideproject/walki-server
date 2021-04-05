@@ -1,1 +1,9 @@
+spring:
+  datasource:
+    url: jdbc:mariadb://walki-dev.c63crzvj0alo.ap-northeast-2.rds.amazonaws.com:3306/walki_db?userUnicode=true
+    username: walki_user
+    password: walki!23
 
+  jpa:
+    hibernate:
+      ddl-auto: update
