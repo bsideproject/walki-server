@@ -5,13 +5,15 @@ import java.util.List;
 import java.util.stream.Collectors;
 
 import org.modelmapper.ModelMapper;
-import org.springframework.stereotype.Service;
+import org.springframework.stereotype.Controller;
 
+import bside.palmtree.config.LoggedIn;
 import bside.palmtree.domain.member.Member;
 import bside.palmtree.service.challenge.ChallengeService;
 import bside.palmtree.service.challenge.dto.ChallengeDto;
 import io.leangen.graphql.annotations.GraphQLMutation;
 import io.leangen.graphql.annotations.GraphQLQuery;
+import io.leangen.graphql.annotations.GraphQLRootContext;
 import io.leangen.graphql.spqr.spring.annotations.GraphQLApi;
 import lombok.RequiredArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
@@ -21,20 +23,14 @@ import lombok.extern.slf4j.Slf4j;
  */
 @Slf4j
 @RequiredArgsConstructor
-@Service
+@Controller
 @GraphQLApi
 public class ChallengeServiceFacade {
 	private final ChallengeService challengeService;
 	private final ModelMapper modelMapper;
 
 	@GraphQLQuery(name = "getChallenges")
-	public List<Challenge> getChallenges(String jwt) {
-
-		// jwt의 member
-		Member member = Member.builder()
-			.id(0L)
-			.name("test")
-			.build();
+	public List<Challenge> getChallenges(@GraphQLRootContext @LoggedIn Member member) {
 
 		return this.challengeService.findAll(member).stream()
 			.map(challenge -> this.modelMapper.map(challenge, Challenge.class))
@@ -42,13 +38,7 @@ public class ChallengeServiceFacade {
 	}
 
 	@GraphQLQuery(name = "getChallenge")
-	public Challenge getChallenge(String jwt, LocalDate challengeDate) {
-
-		// jwt의 member
-		Member member = Member.builder()
-			.id(0L)
-			.name("test")
-			.build();
+	public Challenge getChallenge(@GraphQLRootContext @LoggedIn Member member, LocalDate challengeDate) {
 
 		return this.modelMapper.map(
 			this.challengeService.find(challengeDate, member),
@@ -56,16 +46,10 @@ public class ChallengeServiceFacade {
 	}
 
 	@GraphQLMutation(name = "putChallenge")
-	public Challenge putChallenge(String jwt, Challenge challenge) {
+	public Challenge putChallenge(@GraphQLRootContext @LoggedIn Member member, Challenge challenge) {
 		log.info("putChallenge : {}", challenge);
 
 		ChallengeDto challengeDto = this.modelMapper.map(challenge, ChallengeDto.class);
-
-		// jwt의 member
-		Member member = Member.builder()
-			.id(0L)
-			.name("test")
-			.build();
 
 		return this.modelMapper.map(
 			this.challengeService.save(challengeDto, member),

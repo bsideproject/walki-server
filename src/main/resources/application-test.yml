@@ -1,0 +1,22 @@
+server:
+  port: 8080
+
+spring:
+
+  jpa:
+    show-sql: true
+
+  h2:
+    console:
+      enabled: true
+      path: /h2-console
+  datasource:
+    url: jdbc:h2:mem:testdb
+    username: sa
+    password:
+
+graphql:
+  spqr:
+    gui:
+      enabled: true
+
