@@ -26,6 +26,6 @@ public class ReportService {
 			yearMonth.atDay(1),
 			yearMonth.atEndOfMonth());
 
-		return new Report(challenges);
+		return Report.from(challenges);
 	}
 }

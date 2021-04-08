@@ -1,5 +1,6 @@
 package bside.palmtree.domain.challenge.report;
 
+import java.util.ArrayList;
 import java.util.List;
 
 import bside.palmtree.domain.challenge.Challenge;
@@ -22,7 +23,7 @@ public class Report {
 	private Integer challengeGoal;
 	private List<Challenge> challenges;
 
-	public Report(List<Challenge> challenges) {
+	private Report(List<Challenge> challenges) {
 		this.challenges = challenges;
 		this.stepAchievement = 0;
 		this.stepGoal = 0;
@@ -36,5 +37,9 @@ public class Report {
 			this.stepAchievement += challenge.getStep();
 			this.stepGoal += challenge.getStepGoal();
 		}
+	}
+
+	public static Report from(List<Challenge> challenges) {
+		return new Report(challenges != null ? challenges : new ArrayList<>());
 	}
 }
