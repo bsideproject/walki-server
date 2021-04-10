@@ -63,4 +63,8 @@ public class Challenge extends BaseTimeEntity {
 			this.stepGoal = stepGoal;
 		}
 	}
+
+	public Boolean isSuccess() {
+		return this.step >= this.stepGoal;
+	}
 }
