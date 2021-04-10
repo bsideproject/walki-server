@@ -40,7 +40,7 @@ public class BaseTest {
 			.build();
 
 		String signUpQuery = "mutation {"
-			+ "  signUp(social: KAKAO, token: \"0\")"
+			+ "  signUp(social: APPLE, token: \"0\")"
 			+ "}";
 		this.webTestClient
 			.post()
@@ -54,7 +54,7 @@ public class BaseTest {
 			.blockFirst();
 
 		String signInQuery = "query {\n"
-			+ "  signIn(social: KAKAO, token: \"0\") {\n"
+			+ "  signIn(social: APPLE, token: \"0\") {\n"
 			+ "    accessToken\n"
 			+ "  }\n"
 			+ "}";
