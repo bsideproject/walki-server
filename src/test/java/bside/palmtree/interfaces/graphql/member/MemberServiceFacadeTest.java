@@ -9,7 +9,7 @@ import reactor.core.publisher.Mono;
 /**
  * Created by YHH on 2021/03/25
  */
-class MemberDetailServiceFacadeTest extends BaseTest {
+class MemberServiceFacadeTest extends BaseTest {
 
 	@Test
 	public void saveMemberDetail() throws Exception {

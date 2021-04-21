@@ -31,10 +31,10 @@ public class RankingService {
 	}
 
 	public List<Ranking> findTop10ByDate(LocalDate date) {
-		return this.rankingRepository.findTop10ById_ChallengeDate(date);
+		return this.rankingRepository.findTop10ByChallengeDateOrderByNumber(date);
 	}
 
-	public List<Ranking> findAllMemberAndDate(Member member, LocalDate start, LocalDate end) {
-		return this.rankingRepository.findById_MemberIdAndId_ChallengeDateBetween(member.getId(), start, end);
+	public List<Ranking> findAllByMemberAndDate(Member member, LocalDate start, LocalDate end) {
+		return this.rankingRepository.findByMemberAndChallengeDateBetween(member, start, end);
 	}
 }

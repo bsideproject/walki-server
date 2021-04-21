@@ -2,11 +2,7 @@ package bside.palmtree.domain.challenge;
 
 import java.time.LocalDate;
 
-import javax.persistence.Column;
-import javax.persistence.Entity;
-import javax.persistence.GeneratedValue;
-import javax.persistence.GenerationType;
-import javax.persistence.Id;
+import javax.persistence.*;
 import javax.validation.constraints.Max;
 import javax.validation.constraints.Min;
 
@@ -26,6 +22,7 @@ import lombok.ToString;
 @Setter
 @ToString
 @Entity
+@Table(uniqueConstraints = @UniqueConstraint(columnNames = {"challenge_date", "member_id"}))
 public class Challenge extends BaseTimeEntity {
 	@Id
 	@GeneratedValue(strategy = GenerationType.IDENTITY)

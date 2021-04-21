@@ -2,9 +2,7 @@ package bside.palmtree.domain.challenge.ranking;
 
 import java.time.LocalDate;
 
-import javax.persistence.Column;
-import javax.persistence.EmbeddedId;
-import javax.persistence.Entity;
+import javax.persistence.*;
 
 import bside.palmtree.domain.challenge.Challenge;
 import bside.palmtree.domain.common.BaseTimeEntity;
@@ -21,28 +19,37 @@ import lombok.ToString;
 @Getter
 @ToString
 @Entity
+@Table(uniqueConstraints = @UniqueConstraint(columnNames = {"challenge_date", "member_id"}))
 public class Ranking extends BaseTimeEntity {
+	@Id
+	@GeneratedValue(strategy = GenerationType.IDENTITY)
+	@Column(name = "ranking_id", nullable = false, columnDefinition = "INT(11) UNSIGNED")
+	private Long id;
 
-	@EmbeddedId
-	private RankingId id;
+	@Column(name = "challenge_date", nullable = false)
+	private LocalDate challengeDate;
+
+	@ManyToOne(fetch = FetchType.EAGER)
+	@JoinColumn(name = "member_id",
+		nullable = false,
+		columnDefinition = "INT(11) UNSIGNED")
+	private Member member;
 
 	@Column(name = "ranking_number", nullable = false, columnDefinition = "INT(11) UNSIGNED")
 	private Long number;
 
-	private Ranking(RankingId id, Long number) {
-		this.id = id;
+	public Ranking(LocalDate challengeDate, Member member, Long number) {
+		this.challengeDate = challengeDate;
+		this.member = member;
 		this.number = number;
 	}
 
 	public static Ranking from(Member member, LocalDate date, Long number) {
-		RankingId rankingId = new RankingId(member, date);
-
-		return new Ranking(rankingId, number);
+		return new Ranking(date, member, number);
 	}
 
 	public static Ranking from(Challenge challenge, Long number) {
-		RankingId rankingId = new RankingId(challenge.getMemberId(), challenge.getChallengeDate());
 
-		return new Ranking(rankingId, number);
+		return new Ranking(challenge.getChallengeDate(), Member.builder().id(challenge.getMemberId()).build(), number);
 	}
 }

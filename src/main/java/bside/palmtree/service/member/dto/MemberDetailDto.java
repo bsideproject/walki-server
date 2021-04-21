@@ -13,5 +13,4 @@ import lombok.ToString;
 @ToString
 public class MemberDetailDto {
 	private String name;
-	private Integer challengeGoal;
 }
