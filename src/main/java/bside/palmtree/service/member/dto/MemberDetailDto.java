@@ -1,6 +1,5 @@
 package bside.palmtree.service.member.dto;
 
-import io.leangen.graphql.annotations.GraphQLQuery;
 import lombok.Getter;
 import lombok.Setter;
 import lombok.ToString;

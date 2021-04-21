@@ -33,7 +33,7 @@ public class MemberServiceFacade {
 
 	@GraphQLMutation(name = "putMember")
 	public Member putMember(@GraphQLRootContext @LoggedIn bside.palmtree.domain.member.Member loginMember,
-							Member member) {
+		Member member) {
 		MemberDetailDto memberDetailDto = this.modelMapper.map(member, MemberDetailDto.class);
 
 		return this.modelMapper.map(

@@ -1,11 +1,14 @@
 package bside.palmtree.interfaces.graphql.ranking;
 
+import java.time.LocalDate;
+
 import bside.palmtree.interfaces.graphql.member.Member;
 import io.leangen.graphql.annotations.types.GraphQLType;
-import lombok.*;
-
-
-import java.time.LocalDate;
+import lombok.Builder;
+import lombok.Getter;
+import lombok.NoArgsConstructor;
+import lombok.Setter;
+import lombok.ToString;
 
 @NoArgsConstructor
 @Getter

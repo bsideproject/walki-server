@@ -1,18 +1,14 @@
 package bside.palmtree.interfaces.graphql.member;
 
+import java.time.LocalDateTime;
+
 import bside.palmtree.domain.member.Social;
-import bside.palmtree.domain.member.SocialTypeConverter;
 import io.leangen.graphql.annotations.GraphQLIgnore;
-import io.leangen.graphql.annotations.GraphQLQuery;
 import io.leangen.graphql.annotations.types.GraphQLType;
-import lombok.Builder;
 import lombok.Getter;
 import lombok.NoArgsConstructor;
 import lombok.Setter;
 import lombok.ToString;
-
-import javax.persistence.*;
-import java.time.LocalDateTime;
 
 /**
  * Created by YHH on 2021/02/15

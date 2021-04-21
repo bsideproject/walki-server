@@ -2,7 +2,13 @@ package bside.palmtree.domain.challenge;
 
 import java.time.LocalDate;
 
-import javax.persistence.*;
+import javax.persistence.Column;
+import javax.persistence.Entity;
+import javax.persistence.GeneratedValue;
+import javax.persistence.GenerationType;
+import javax.persistence.Id;
+import javax.persistence.Table;
+import javax.persistence.UniqueConstraint;
 import javax.validation.constraints.Max;
 import javax.validation.constraints.Min;
 
@@ -40,7 +46,7 @@ public class Challenge extends BaseTimeEntity {
 	private Integer step;
 
 	@Min(value = 200)
-	@Max(value = 10000)
+	@Max(value = 100000)
 	@Column(name = "step_goal", nullable = false)
 	private Integer stepGoal;
 

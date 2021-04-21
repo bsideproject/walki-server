@@ -1,11 +1,11 @@
 package bside.palmtree.service.member;
 
-import bside.palmtree.domain.member.MemberDetail;
-import bside.palmtree.domain.member.MemberRepository;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 
 import bside.palmtree.domain.member.Member;
+import bside.palmtree.domain.member.MemberDetail;
+import bside.palmtree.domain.member.MemberRepository;
 import bside.palmtree.service.member.dto.MemberDetailDto;
 import lombok.RequiredArgsConstructor;
 

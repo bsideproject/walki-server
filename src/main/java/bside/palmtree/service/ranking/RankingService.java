@@ -3,7 +3,10 @@ package bside.palmtree.service.ranking;
 import java.time.LocalDate;
 import java.util.List;
 
+import javax.persistence.EntityManager;
+
 import org.springframework.stereotype.Service;
+import org.springframework.transaction.annotation.Transactional;
 
 import bside.palmtree.domain.challenge.Challenge;
 import bside.palmtree.domain.challenge.ChallengeRepository;
@@ -21,12 +24,16 @@ import lombok.RequiredArgsConstructor;
 public class RankingService {
 	private final RankingRepository rankingRepository;
 	private final ChallengeRepository challengeRepository;
+	private final EntityManager entityManager;
 
+	@Transactional
 	public void createRankings(LocalDate date) {
+		this.rankingRepository.deleteAllByChallengeDate(date);
+		this.entityManager.flush();
+
 		List<Challenge> challenges = this.challengeRepository.findByChallengeDate(date);
 
 		ChallengeRanking challengeRanking = ChallengeRanking.from(challenges);
-
 		this.rankingRepository.saveAll(challengeRanking.getRankings());
 	}
 
