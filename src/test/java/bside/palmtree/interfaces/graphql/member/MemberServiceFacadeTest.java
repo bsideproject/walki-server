@@ -9,14 +9,13 @@ import reactor.core.publisher.Mono;
 /**
  * Created by YHH on 2021/03/25
  */
-class MemberDetailServiceFacadeTest extends BaseTest {
+class MemberServiceFacadeTest extends BaseTest {
 
 	@Test
-	public void saveMemberDetail() throws Exception {
+	public void saveMember() throws Exception {
 		String putMemberQuery = "mutation {\n"
-			+ "  putMemberDetail(memberDetail:{name: \"유니\", challenge_goal: 20}) {\n"
+			+ "  putMember(member:{name: \"유니\"}) {\n"
 			+ "    name"
-			+ "    challenge_goal"
 			+ "  }\n"
 			+ "}";
 
@@ -29,12 +28,11 @@ class MemberDetailServiceFacadeTest extends BaseTest {
 			.expectStatus()
 			.isOk()
 			.expectBody()
-			.jsonPath("$.data.putMemberDetail.name").isEqualTo("유니");
+			.jsonPath("$.data.putMember.name").isEqualTo("유니");
 
 		String getMemberQuery = "query {"
-			+ "  getMemberDetail {"
+			+ "  getMember {"
 			+ "    name"
-			+ "    challenge_goal"
 			+ "  }"
 			+ "}";
 
@@ -47,6 +45,6 @@ class MemberDetailServiceFacadeTest extends BaseTest {
 			.expectStatus()
 			.isOk()
 			.expectBody()
-			.jsonPath("$.data.getMemberDetail.name").isEqualTo("유니");
+			.jsonPath("$.data.getMember.name").isEqualTo("유니");
 	}
 }
