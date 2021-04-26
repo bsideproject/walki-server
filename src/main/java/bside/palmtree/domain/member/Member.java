@@ -29,7 +29,7 @@ public class Member extends BaseTimeEntity {
 
 	@Id
 	@GeneratedValue(strategy = GenerationType.IDENTITY)
-	@Column(name = "member_id", nullable = false)
+	@Column(name = "member_id", nullable = false, columnDefinition = "INT(11) UNSIGNED")
 	private Long id;
 
 	@Column(name = "social", nullable = false)
@@ -39,9 +39,17 @@ public class Member extends BaseTimeEntity {
 	@Column(name = "social_id", nullable = false)
 	private String socialId;
 
+	@Column(name = "name")
+	private String name;
+
 	@Builder
-	public Member(Social social, String socialId) {
+	public Member(Long id, Social social, String socialId) {
+		this.id = id;
 		this.social = social;
 		this.socialId = socialId;
+	}
+
+	public void update(MemberDetail memberDetail) {
+		this.name = memberDetail.getName();
 	}
 }

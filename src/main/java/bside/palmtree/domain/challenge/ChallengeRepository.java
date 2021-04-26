@@ -16,4 +16,6 @@ public interface ChallengeRepository extends JpaRepository<Challenge, Long> {
 	List<Challenge> findAllByMemberIdOrderByChallengeDateDesc(Long memberId);
 
 	List<Challenge> findAllByMemberIdAndChallengeDateBetween(Long memberId, LocalDate start, LocalDate end);
+
+	List<Challenge> findByChallengeDate(LocalDate date);
 }
