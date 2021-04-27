@@ -1,4 +1,6 @@
-package bside.palmtree.domain.member;
+package bside.palmtree.domain.membercoach;
+
+import java.util.Objects;
 
 import javax.persistence.Column;
 import javax.persistence.Entity;
@@ -7,10 +9,12 @@ import javax.persistence.GenerationType;
 import javax.persistence.Id;
 import javax.persistence.JoinColumn;
 import javax.persistence.ManyToOne;
+import javax.persistence.OneToOne;
 import javax.persistence.Table;
 
 import bside.palmtree.domain.coach.Coach;
 import bside.palmtree.domain.common.BaseTimeEntity;
+import bside.palmtree.domain.member.Member;
 import lombok.AccessLevel;
 import lombok.Builder;
 import lombok.Getter;
@@ -29,18 +33,24 @@ public class MemberCoach extends BaseTimeEntity {
 	@Column(name = "id", nullable = false, columnDefinition = "INT(11) UNSIGNED")
 	private Long id;
 
-	@ManyToOne
+	@OneToOne
 	@JoinColumn(name = "member_id", nullable = false, columnDefinition = "INT(11) UNSIGNED")
-	private Member memberId;
+	private Member member;
 
 	@ManyToOne
 	@JoinColumn(name = "coach_id", nullable = false, columnDefinition = "INT(11) UNSIGNED")
-	private Coach coachId;
+	private Coach coach;
 
 	@Builder
-	public MemberCoach(Long id, Member memberId, Coach coachId) {
+	public MemberCoach(Long id, Member member, Coach coach) {
 		this.id = id;
-		this.memberId = memberId;
-		this.coachId = coachId;
+		this.member = member;
+		this.coach = coach;
+	}
+
+	public void update(Coach coach) {
+		if (Objects.nonNull(coach)) {
+			this.coach = coach;
+		}
 	}
 }

@@ -23,8 +23,8 @@ public class CoachServiceFacade {
 	private final CoachService coachService;
 	private final ModelMapper modelMapper;
 
-	@GraphQLQuery(name = "getCoachList")
-	public List<Coach> getCoachList(@GraphQLRootContext @LoggedIn Member member) {
+	@GraphQLQuery(name = "getCoaches")
+	public List<Coach> getCoaches(@GraphQLRootContext @LoggedIn Member member) {
 
 		return this.coachService.findAll().stream()
 			.map(coach -> this.modelMapper.map(coach, Coach.class))

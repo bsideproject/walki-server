@@ -6,13 +6,13 @@ import org.springframework.http.HttpHeaders;
 import bside.palmtree.interfaces.graphql.common.BaseTest;
 import reactor.core.publisher.Mono;
 
-class CoachDtoServiceFacadeTest extends BaseTest {
+class CoachServiceFacadeTest extends BaseTest {
 
 	@Test
 	public void successGetCoachList() throws Exception {
 		String getCoachListQuery = "query {"
-			+ "  getCoachList {"
-			+ "    coachId"
+			+ "  getCoaches {"
+			+ "    id"
 			+ "    description"
 			+ "    name"
 			+ "  }"
@@ -27,7 +27,7 @@ class CoachDtoServiceFacadeTest extends BaseTest {
 			.expectStatus()
 			.isOk()
 			.expectBody()
-			.jsonPath("$.data.getCoachList").isArray();
+			.jsonPath("$.data.getCoaches").isArray();
 
 	}
 }
