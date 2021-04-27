@@ -1,4 +1,4 @@
-package bside.palmtree.service.memberCoach.dto;
+package bside.palmtree.service.membercoach.dto;
 
 import lombok.Getter;
 import lombok.ToString;
