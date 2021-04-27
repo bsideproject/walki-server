@@ -7,6 +7,8 @@ import javax.persistence.Entity;
 import javax.persistence.GeneratedValue;
 import javax.persistence.GenerationType;
 import javax.persistence.Id;
+import javax.persistence.Table;
+import javax.persistence.UniqueConstraint;
 import javax.validation.constraints.Max;
 import javax.validation.constraints.Min;
 
@@ -26,6 +28,7 @@ import lombok.ToString;
 @Setter
 @ToString
 @Entity
+@Table(uniqueConstraints = @UniqueConstraint(columnNames = {"challenge_date", "member_id"}))
 public class Challenge extends BaseTimeEntity {
 	@Id
 	@GeneratedValue(strategy = GenerationType.IDENTITY)
@@ -43,7 +46,7 @@ public class Challenge extends BaseTimeEntity {
 	private Integer step;
 
 	@Min(value = 200)
-	@Max(value = 10000)
+	@Max(value = 100000)
 	@Column(name = "step_goal", nullable = false)
 	private Integer stepGoal;
 
