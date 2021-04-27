@@ -9,6 +9,8 @@ import javax.persistence.Id;
 import javax.persistence.Table;
 import javax.persistence.UniqueConstraint;
 
+import org.apache.logging.log4j.util.Strings;
+
 import bside.palmtree.domain.common.BaseTimeEntity;
 import lombok.Builder;
 import lombok.Getter;
@@ -42,14 +44,25 @@ public class Member extends BaseTimeEntity {
 	@Column(name = "name")
 	private String name;
 
+	@Column(name = "profile_image", length = 1000)
+	private String profileImage;
+
 	@Builder
-	public Member(Long id, Social social, String socialId) {
+	public Member(Long id, Social social, String socialId, String name, String profileImage) {
 		this.id = id;
 		this.social = social;
 		this.socialId = socialId;
+		this.name = name;
+		this.profileImage = profileImage;
 	}
 
 	public void update(MemberDetail memberDetail) {
-		this.name = memberDetail.getName();
+		if (Strings.isNotEmpty(memberDetail.getName())) {
+			this.name = memberDetail.getName();
+		}
+
+		if (Strings.isNotEmpty(memberDetail.getProfileImage())) {
+			this.profileImage = memberDetail.getProfileImage();
+		}
 	}
 }

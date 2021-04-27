@@ -2,7 +2,6 @@ package bside.palmtree.service.coach.dto;
 
 import java.time.LocalDateTime;
 
-import io.leangen.graphql.annotations.GraphQLIgnore;
 import lombok.Getter;
 import lombok.Setter;
 import lombok.ToString;

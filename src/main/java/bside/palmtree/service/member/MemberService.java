@@ -25,6 +25,7 @@ public class MemberService {
 
 		MemberDetail memberDetail = MemberDetail.builder()
 			.name(memberDetailDto.getName())
+			.profileImage(memberDetailDto.getProfileImage())
 			.build();
 
 		findMember.update(memberDetail);

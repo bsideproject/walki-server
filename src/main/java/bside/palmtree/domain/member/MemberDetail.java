@@ -13,9 +13,11 @@ import lombok.ToString;
 @ToString
 public class MemberDetail {
 	private String name;
+	private String profileImage;
 
 	@Builder
-	public MemberDetail(String name) {
+	public MemberDetail(String name, String profileImage) {
 		this.name = name;
+		this.profileImage = profileImage;
 	}
 }
