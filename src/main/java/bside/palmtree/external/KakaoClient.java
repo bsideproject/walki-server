@@ -13,16 +13,16 @@ import reactor.core.publisher.Mono;
  */
 public class KakaoClient implements OAuthClient {
 	private static final String API_SERVER_HOST = "https://kapi.kakao.com";
-	private static final String TOKEN_INFO_PATH = "/v1/user/access_token_info";
+	private static final String TOKEN_INFO_PATH = "/v2/user/me";
 
-	private WebClient KApiClient() {
+	private WebClient kakaoApiClient() {
 		return WebClient.builder()
 			.baseUrl(API_SERVER_HOST)
 			.build();
 	}
 
 	public TokenInfo getTokenInfo(String accessToken) {
-		return this.KApiClient()
+		return this.kakaoApiClient()
 			.get()
 			.uri(TOKEN_INFO_PATH)
 			.header(HttpHeaders.AUTHORIZATION, "Bearer " + accessToken)

@@ -17,12 +17,14 @@ import lombok.ToString;
 @Getter
 @Setter
 @ToString
-@GraphQLType(name = "Member", fieldOrder = {"id", "social", "socialId", "name", "createdAt", "updatedAt"})
+@GraphQLType(name = "Member", fieldOrder = {"id", "social", "socialId", "name", "profileImage", "createdAt",
+	"updatedAt"})
 public class Member {
 	private Long id;
 	private Social social;
 	private String socialId;
 	private String name;
+	private String profileImage;
 	private LocalDateTime createdAt;
 	private LocalDateTime updatedAt;
 
@@ -39,6 +41,11 @@ public class Member {
 	@GraphQLIgnore
 	public void setSocialId(String socialId) {
 		this.socialId = socialId;
+	}
+
+	@GraphQLIgnore
+	public void setProfileImage(String profileImage) {
+		this.profileImage = profileImage;
 	}
 
 	@GraphQLIgnore
