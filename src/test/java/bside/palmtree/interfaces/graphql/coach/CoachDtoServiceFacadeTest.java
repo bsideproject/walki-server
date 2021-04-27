@@ -6,7 +6,7 @@ import org.springframework.http.HttpHeaders;
 import bside.palmtree.interfaces.graphql.common.BaseTest;
 import reactor.core.publisher.Mono;
 
-class CoachServiceFacadeTest extends BaseTest {
+class CoachDtoServiceFacadeTest extends BaseTest {
 
 	@Test
 	public void successGetCoachList() throws Exception {
