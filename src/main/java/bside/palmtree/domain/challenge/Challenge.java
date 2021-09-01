@@ -32,10 +32,10 @@ import lombok.ToString;
 public class Challenge extends BaseTimeEntity {
 	@Id
 	@GeneratedValue(strategy = GenerationType.IDENTITY)
-	@Column(name = "challenge_id", nullable = false, columnDefinition = "INT(11) UNSIGNED")
+	@Column(name = "challenge_id", nullable = false)
 	private Long id;
 
-	@Column(name = "member_id", nullable = false, columnDefinition = "INT(11) UNSIGNED")
+	@Column(name = "member_id", nullable = false)
 	private Long memberId;
 
 	@Column(name = "challenge_date", nullable = false)

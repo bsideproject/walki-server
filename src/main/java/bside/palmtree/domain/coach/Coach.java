@@ -5,6 +5,7 @@ import javax.persistence.Entity;
 import javax.persistence.GeneratedValue;
 import javax.persistence.GenerationType;
 import javax.persistence.Id;
+import javax.persistence.Lob;
 
 import bside.palmtree.domain.common.BaseTimeEntity;
 import lombok.Getter;
@@ -21,12 +22,13 @@ public class Coach extends BaseTimeEntity {
 
 	@Id
 	@GeneratedValue(strategy = GenerationType.IDENTITY)
-	@Column(name = "coach_id", nullable = false, columnDefinition = "INT(11) UNSIGNED")
+	@Column(name = "coach_id", nullable = false)
 	private Long id;
 
 	@Column(name = "name", nullable = false, unique = true)
 	private String name;
 
-	@Column(name = "description", columnDefinition = "TEXT")
+	@Lob
+	@Column(name = "description")
 	private String description;
 }
