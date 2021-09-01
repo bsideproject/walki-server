@@ -1,4 +1,4 @@
-package bside.palmtree.external;
+package bside.palmtree.external.oauth.dto;
 
 import java.util.Objects;
 
