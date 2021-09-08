@@ -21,6 +21,7 @@ public class MemberService {
 	@Transactional
 	public Member save(Member member, MemberDetailDto memberDetailDto) {
 		Member findMember = this.memberRepository.findById(member.getId())
+			.filter(Member::isActive)
 			.orElseThrow(() -> new IllegalArgumentException("없는 유저 입니다."));
 
 		MemberDetail memberDetail = MemberDetail.builder()
@@ -35,6 +36,18 @@ public class MemberService {
 
 	public Member findById(Member member) {
 		return this.memberRepository.findById(member.getId())
+			.filter(Member::isActive)
 			.orElseThrow(() -> new IllegalArgumentException("없는 유저 입니다."));
+	}
+
+	@Transactional
+	public Boolean deleteMember(Member member) {
+		Member findMember = this.memberRepository.findById(member.getId())
+			.filter(Member::isActive)
+			.orElseThrow(() -> new IllegalArgumentException("없는 유저 입니다."));
+
+		findMember.delete();
+
+		return true;
 	}
 }
