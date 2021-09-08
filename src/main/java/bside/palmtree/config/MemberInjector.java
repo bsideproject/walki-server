@@ -7,6 +7,7 @@ import org.springframework.http.HttpHeaders;
 import org.springframework.stereotype.Component;
 import org.springframework.web.context.request.ServletWebRequest;
 
+import bside.palmtree.domain.member.Member;
 import bside.palmtree.domain.member.MemberRepository;
 import io.leangen.graphql.execution.ResolutionEnvironment;
 import io.leangen.graphql.generator.mapping.ArgumentInjector;
@@ -37,6 +38,7 @@ public class MemberInjector implements ArgumentInjector {
 		String jwt = getJwtByHeader(rootContext);
 
 		return this.memberRepository.findById(this.jwtProvider.getMemberId(jwt))
+			.filter(Member::isActive)
 			.orElseThrow(() -> new AuthorizationException("유저 조회 실패"));
 	}
 

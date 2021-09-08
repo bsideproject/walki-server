@@ -1,8 +1,9 @@
 package bside.palmtree.domain.member;
 
 import javax.persistence.Column;
-import javax.persistence.Convert;
 import javax.persistence.Entity;
+import javax.persistence.EnumType;
+import javax.persistence.Enumerated;
 import javax.persistence.GeneratedValue;
 import javax.persistence.GenerationType;
 import javax.persistence.Id;
@@ -34,11 +35,11 @@ public class Member extends BaseTimeEntity {
 	@Column(name = "member_id", nullable = false, columnDefinition = "INT(11) UNSIGNED")
 	private Long id;
 
-	@Column(name = "social", nullable = false)
-	@Convert(converter = SocialTypeConverter.class)
+	@Column(name = "social")
+	@Enumerated(EnumType.STRING)
 	private Social social;
 
-	@Column(name = "social_id", nullable = false)
+	@Column(name = "social_id")
 	private String socialId;
 
 	@Column(name = "name")
@@ -47,6 +48,10 @@ public class Member extends BaseTimeEntity {
 	@Column(name = "profile_image", length = 1000)
 	private String profileImage;
 
+	@Column(name = "status", nullable = false)
+	@Enumerated(EnumType.STRING)
+	private Status status;
+
 	@Builder
 	public Member(Long id, Social social, String socialId, String name, String profileImage) {
 		this.id = id;
@@ -54,6 +59,7 @@ public class Member extends BaseTimeEntity {
 		this.socialId = socialId;
 		this.name = name;
 		this.profileImage = profileImage;
+		this.status = Status.ACTIVE;
 	}
 
 	public void update(MemberDetail memberDetail) {
@@ -64,5 +70,19 @@ public class Member extends BaseTimeEntity {
 		if (Strings.isNotEmpty(memberDetail.getProfileImage())) {
 			this.profileImage = memberDetail.getProfileImage();
 		}
+	}
+
+	public void delete() {
+		this.status = Status.INACTIVE;
+		this.social = null;
+		this.socialId = null;
+	}
+
+	public Boolean isActive() {
+		return Status.ACTIVE == this.status;
+	}
+
+	public enum Status {
+		ACTIVE, INACTIVE
 	}
 }

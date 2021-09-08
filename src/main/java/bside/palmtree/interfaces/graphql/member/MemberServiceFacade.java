@@ -62,4 +62,10 @@ public class MemberServiceFacade {
 
 		return resultMember;
 	}
+
+	@GraphQLMutation(name = "deleteMember")
+	public Boolean deleteMember(@GraphQLRootContext @LoggedIn bside.palmtree.domain.member.Member loginMember) {
+
+		return this.memberService.deleteMember(loginMember);
+	}
 }
