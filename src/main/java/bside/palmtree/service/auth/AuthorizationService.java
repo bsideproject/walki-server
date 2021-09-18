@@ -6,8 +6,8 @@ import bside.palmtree.config.AuthorizationJwtProvider;
 import bside.palmtree.domain.member.Member;
 import bside.palmtree.domain.member.MemberRepository;
 import bside.palmtree.domain.member.Social;
-import bside.palmtree.external.OAuthService;
-import bside.palmtree.external.TokenInfo;
+import bside.palmtree.external.oauth.OAuthService;
+import bside.palmtree.external.oauth.dto.TokenInfo;
 import bside.palmtree.service.member.MemberService;
 import bside.palmtree.service.member.dto.MemberDetailDto;
 import lombok.RequiredArgsConstructor;
@@ -24,7 +24,6 @@ public class AuthorizationService {
 	private final OAuthService oAuthService;
 
 	public String signIn(Social social, String token) {
-		// TODO : SNS 유저 정보 확인 APPLE API 구현 필요
 		TokenInfo tokenInfo = this.oAuthService.getTokenInfo(social, token);
 
 		Member member = this.memberRepository.findBySocialAndSocialId(social, tokenInfo.getId())
@@ -40,7 +39,6 @@ public class AuthorizationService {
 	}
 
 	public Boolean signUp(Social social, String token) {
-		// TODO : SNS 유저 정보 확인 APPLE API 구현 필요
 		TokenInfo tokenInfo = this.oAuthService.getTokenInfo(social, token);
 
 		if (this.memberRepository.findBySocialAndSocialId(social, tokenInfo.getId()).isPresent()) {

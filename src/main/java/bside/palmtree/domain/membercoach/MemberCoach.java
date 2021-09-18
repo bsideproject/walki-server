@@ -30,15 +30,15 @@ public class MemberCoach extends BaseTimeEntity {
 
 	@Id
 	@GeneratedValue(strategy = GenerationType.IDENTITY)
-	@Column(name = "id", nullable = false, columnDefinition = "INT(11) UNSIGNED")
+	@Column(name = "id", nullable = false)
 	private Long id;
 
 	@OneToOne
-	@JoinColumn(name = "member_id", nullable = false, columnDefinition = "INT(11) UNSIGNED")
+	@JoinColumn(name = "member_id", nullable = false)
 	private Member member;
 
 	@ManyToOne
-	@JoinColumn(name = "coach_id", nullable = false, columnDefinition = "INT(11) UNSIGNED")
+	@JoinColumn(name = "coach_id", nullable = false)
 	private Coach coach;
 
 	@Builder

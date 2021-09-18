@@ -32,19 +32,17 @@ import lombok.ToString;
 public class Ranking extends BaseTimeEntity {
 	@Id
 	@GeneratedValue(strategy = GenerationType.IDENTITY)
-	@Column(name = "ranking_id", nullable = false, columnDefinition = "INT(11) UNSIGNED")
+	@Column(name = "ranking_id", nullable = false)
 	private Long id;
 
 	@Column(name = "challenge_date", nullable = false)
 	private LocalDate challengeDate;
 
 	@ManyToOne(fetch = FetchType.EAGER)
-	@JoinColumn(name = "member_id",
-		nullable = false,
-		columnDefinition = "INT(11) UNSIGNED")
+	@JoinColumn(name = "member_id", nullable = false)
 	private Member member;
 
-	@Column(name = "ranking_number", nullable = false, columnDefinition = "INT(11) UNSIGNED")
+	@Column(name = "ranking_number", nullable = false)
 	private Long number;
 
 	public Ranking(LocalDate challengeDate, Member member, Long number) {

@@ -22,3 +22,10 @@ graphql:
     gui:
       enabled: true
 
+walki:
+  apple:
+    base-url: https://appleid.apple.com
+    service-id: bside.palmtree # client_id, aud
+    team-id: P72UR4K32D
+    key-id: 785WUJMK9U
+    key-path: auth/AuthKey_785WUJMK9U.p8

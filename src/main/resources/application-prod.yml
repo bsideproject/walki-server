@@ -1,0 +1,9 @@
+spring:
+  datasource:
+    url: jdbc:postgresql://133.186.250.44:5432/walki
+    username: walki
+    password: walki123}
+
+  jpa:
+    hibernate:
+      ddl-auto: validate

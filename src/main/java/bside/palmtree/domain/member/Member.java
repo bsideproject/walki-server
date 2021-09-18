@@ -32,7 +32,7 @@ public class Member extends BaseTimeEntity {
 
 	@Id
 	@GeneratedValue(strategy = GenerationType.IDENTITY)
-	@Column(name = "member_id", nullable = false, columnDefinition = "INT(11) UNSIGNED")
+	@Column(name = "member_id", nullable = false)
 	private Long id;
 
 	@Column(name = "social")
