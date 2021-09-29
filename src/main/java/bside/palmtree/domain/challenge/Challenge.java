@@ -51,10 +51,10 @@ public class Challenge extends BaseTimeEntity {
 	private Integer stepGoal;
 
 	@Builder
-	public Challenge(LocalDate challengeDate, Integer stepGoal, Member member) {
+	public Challenge(LocalDate challengeDate, Integer step, Integer stepGoal, Member member) {
 		this.memberId = member.getId();
 		this.challengeDate = challengeDate;
-		this.step = 0;
+		this.step = step;
 		this.stepGoal = stepGoal;
 	}
 
