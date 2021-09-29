@@ -35,6 +35,7 @@ public class ChallengeService {
 		}
 
 		Challenge challenge = Challenge.builder()
+			.step(challengeDto.getStep())
 			.challengeDate(challengeDto.getChallengeDate())
 			.stepGoal(challengeDto.getStepGoal())
 			.member(member)
