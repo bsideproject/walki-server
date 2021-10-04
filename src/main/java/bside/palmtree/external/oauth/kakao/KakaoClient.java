@@ -12,6 +12,7 @@ import org.springframework.web.reactive.function.client.WebClient;
 import bside.palmtree.external.oauth.OAuthClient;
 import bside.palmtree.external.oauth.exception.OAuthClientException;
 import bside.palmtree.external.oauth.dto.TokenInfo;
+import lombok.RequiredArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
 import reactor.core.publisher.Mono;
 
@@ -20,9 +21,13 @@ import reactor.core.publisher.Mono;
  */
 @Slf4j
 @Component
+@RequiredArgsConstructor
 public class KakaoClient implements OAuthClient {
 	private static final String API_SERVER_HOST = "https://kapi.kakao.com";
 	private static final String TOKEN_INFO_PATH = "/v2/user/me";
+	private static final String VALID_TOKEN_PATH = "/v1/user/access_token_info";
+
+	private final KakaoClientProperties kakaoClientProperties;
 
 	private WebClient kakaoApiClient() {
 		return WebClient.builder()
@@ -30,7 +35,28 @@ public class KakaoClient implements OAuthClient {
 			.build();
 	}
 
+	public boolean validAccessToken(String accessToken) {
+		AccessTokenInfo accessTokenInfo = this.kakaoApiClient()
+			.get()
+			.uri(VALID_TOKEN_PATH)
+			.header(HttpHeaders.AUTHORIZATION, "Bearer " + accessToken)
+			.retrieve()
+			.onStatus(HttpStatus::isError, setResponseBodyInException())
+			.bodyToMono(AccessTokenInfo.class)
+			.timeout(Duration.ofSeconds(5))
+			.flux()
+			.toStream()
+			.findFirst()
+			.orElseThrow(() -> new IllegalArgumentException("fail validAccessToken"));
+
+		return this.kakaoClientProperties.getAppId().equals(accessTokenInfo.getAppId());
+	}
+
 	public TokenInfo getTokenInfo(String accessToken) {
+		if (!validAccessToken(accessToken)) {
+			throw new IllegalArgumentException("사용할 수 없는 토큰입니다.");
+		}
+
 		return this.kakaoApiClient()
 			.get()
 			.uri(TOKEN_INFO_PATH)
