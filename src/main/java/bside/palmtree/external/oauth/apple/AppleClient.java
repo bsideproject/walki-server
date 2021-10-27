@@ -1,21 +1,28 @@
 package bside.palmtree.external.oauth.apple;
 
+import java.nio.file.Files;
+import java.security.KeyFactory;
+import java.security.PrivateKey;
+import java.security.spec.PKCS8EncodedKeySpec;
 import java.time.Duration;
 import java.util.Date;
 import java.util.function.Function;
 
+import org.springframework.core.io.ClassPathResource;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.MediaType;
 import org.springframework.stereotype.Component;
+import org.springframework.util.Base64Utils;
 import org.springframework.util.LinkedMultiValueMap;
 import org.springframework.util.MultiValueMap;
 import org.springframework.web.reactive.function.BodyInserters;
 import org.springframework.web.reactive.function.client.ClientResponse;
 import org.springframework.web.reactive.function.client.WebClient;
 
+import bside.palmtree.config.AuthorizationException;
 import bside.palmtree.external.oauth.OAuthClient;
-import bside.palmtree.external.oauth.exception.OAuthClientException;
 import bside.palmtree.external.oauth.dto.TokenInfo;
+import bside.palmtree.external.oauth.exception.OAuthClientException;
 import io.jsonwebtoken.Jwts;
 import io.jsonwebtoken.SignatureAlgorithm;
 import lombok.RequiredArgsConstructor;
@@ -69,11 +76,27 @@ public class AppleClient implements OAuthClient {
 			.setExpiration(new Date(now.getTime() + 3600000))
 			.setAudience(appleClientProperties.getBaseUrl())
 			.setSubject(appleClientProperties.getServiceId())
-			.signWith(SignatureAlgorithm.HS256, appleClientProperties.getKeyId())
+			.signWith(SignatureAlgorithm.ES256, getPrivateKey())
 			.compact();
 	}
 
+	private PrivateKey getPrivateKey() {
+		try {
+			String key = Files.readString(new ClassPathResource(appleClientProperties.getKeyPath()).getFile().toPath());
+			key = key.replaceFirst("-----BEGIN PRIVATE KEY-----", "");
+			key = key.replaceFirst("-----END PRIVATE KEY-----", "");
+			key = key.replaceAll("\\s", "");
+
+			byte[] keyBytes = Base64Utils.decodeFromString(key);
+			KeyFactory factory = KeyFactory.getInstance("EC");
+			return factory.generatePrivate(new PKCS8EncodedKeySpec(keyBytes));
+		} catch (Exception e) {
+			throw new AuthorizationException("애플 PrivateKey 생성 실패");
+		}
+	}
+
 	public TokenInfo convertTokenInfo(AppleTokenAuthResponse appleTokenAuthResponse) {
+		log.info("AppleTokenAuthResponse : {}", appleTokenAuthResponse);
 		String tokenId = appleTokenAuthResponse.getIdToken();
 
 		String id = Jwts.parser()
