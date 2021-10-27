@@ -27,5 +27,5 @@ walki:
     base-url: https://appleid.apple.com
     service-id: bside.palmtree # client_id, aud
     team-id: P72UR4K32D
-    key-id: 785WUJMK9U
-    key-path: auth/AuthKey_785WUJMK9U.p8
+    key-id: Y97F78DFRD
+    key-path: apple/AuthKey_Y97F78DFRD.p8
