@@ -25,7 +25,7 @@ public class AuthorizationJwtProvider {
 	public String createToken(Member member, Map<String, Object> data) {
 		Date now = new Date();
 
-		long tokenValidTime = 24 * 60 * 60 * 1000L;
+		long tokenValidTime = 30 * 24 * 60 * 60 * 1000L;
 
 		return Jwts.builder()
 			.setSubject(member.getId().toString())
