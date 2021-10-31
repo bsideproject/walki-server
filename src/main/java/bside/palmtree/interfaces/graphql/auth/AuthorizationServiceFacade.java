@@ -4,10 +4,13 @@ import javax.validation.constraints.NotNull;
 
 import org.springframework.stereotype.Service;
 
+import bside.palmtree.config.LoggedIn;
+import bside.palmtree.domain.member.Member;
 import bside.palmtree.domain.member.Social;
 import bside.palmtree.service.auth.AuthorizationService;
 import io.leangen.graphql.annotations.GraphQLMutation;
 import io.leangen.graphql.annotations.GraphQLQuery;
+import io.leangen.graphql.annotations.GraphQLRootContext;
 import io.leangen.graphql.spqr.spring.annotations.GraphQLApi;
 import lombok.RequiredArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
@@ -26,6 +29,12 @@ public class AuthorizationServiceFacade {
 	public SignInResult signIn(@NotNull Social social, @NotNull String token) {
 
 		return new SignInResult(this.authorizationService.signIn(social, token));
+	}
+
+	@GraphQLQuery(name = "refreshToken")
+	public SignInResult refreshToken(@GraphQLRootContext @LoggedIn Member member) {
+
+		return new SignInResult(this.authorizationService.refreshToken(member));
 	}
 
 	@GraphQLMutation(name = "signUp")
