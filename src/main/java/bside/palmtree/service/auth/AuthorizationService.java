@@ -56,4 +56,9 @@ public class AuthorizationService {
 
 		return true;
 	}
+
+	public String refreshToken(Member member) {
+
+		return this.authorizationJwtProvider.createToken(member, null);
+	}
 }
