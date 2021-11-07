@@ -31,4 +31,10 @@ public class ReportServiceFacade {
 			Report.class
 		);
 	}
+
+	@GraphQLQuery(name = "getReportMonth")
+	public ReportMonth getReportMonth(@GraphQLRootContext @LoggedIn Member member) {
+
+		return ReportMonth.from(this.reportService.getReportMonth(member).getYearMonthList());
+	}
 }
