@@ -8,6 +8,7 @@ import org.springframework.stereotype.Service;
 import bside.palmtree.domain.challenge.Challenge;
 import bside.palmtree.domain.challenge.ChallengeRepository;
 import bside.palmtree.domain.challenge.report.Report;
+import bside.palmtree.domain.challenge.report.ReportMonth;
 import bside.palmtree.domain.member.Member;
 import lombok.RequiredArgsConstructor;
 
@@ -27,5 +28,10 @@ public class ReportService {
 			yearMonth.atEndOfMonth());
 
 		return Report.from(challenges);
+	}
+
+	public ReportMonth getReportMonth(Member member) {
+
+		return ReportMonth.from(this.challengeRepository.findByMemberId(member.getId()));
 	}
 }
