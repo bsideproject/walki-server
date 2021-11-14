@@ -25,7 +25,7 @@ graphql:
 walki:
   apple:
     base-url: https://appleid.apple.com
-    service-id: bside.palmtree # client_id, aud
+    service-id: com.bside.walki # client_id, aud
     team-id: P72UR4K32D
     key-id: Y97F78DFRD
     key-path: apple/AuthKey_Y97F78DFRD.p8

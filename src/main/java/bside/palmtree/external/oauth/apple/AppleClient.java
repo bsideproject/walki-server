@@ -1,11 +1,17 @@
 package bside.palmtree.external.oauth.apple;
 
+import java.math.BigInteger;
+import java.nio.charset.StandardCharsets;
 import java.nio.file.Files;
 import java.security.KeyFactory;
 import java.security.PrivateKey;
+import java.security.PublicKey;
 import java.security.spec.PKCS8EncodedKeySpec;
+import java.security.spec.RSAPublicKeySpec;
 import java.time.Duration;
+import java.util.Base64;
 import java.util.Date;
+import java.util.Map;
 import java.util.function.Function;
 
 import org.springframework.core.io.ClassPathResource;
@@ -19,12 +25,16 @@ import org.springframework.web.reactive.function.BodyInserters;
 import org.springframework.web.reactive.function.client.ClientResponse;
 import org.springframework.web.reactive.function.client.WebClient;
 
+import com.fasterxml.jackson.core.type.TypeReference;
+import com.fasterxml.jackson.databind.ObjectMapper;
+
 import bside.palmtree.config.AuthorizationException;
 import bside.palmtree.external.oauth.OAuthClient;
 import bside.palmtree.external.oauth.dto.TokenInfo;
 import bside.palmtree.external.oauth.exception.OAuthClientException;
 import io.jsonwebtoken.Jwts;
 import io.jsonwebtoken.SignatureAlgorithm;
+import io.jsonwebtoken.impl.DefaultJwtParser;
 import lombok.RequiredArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
 import reactor.core.publisher.Mono;
@@ -36,6 +46,7 @@ public class AppleClient implements OAuthClient {
 	private static final String TOKEN_AUTH_URL = "/auth/token";
 
 	private final AppleClientProperties appleClientProperties;
+	private final ObjectMapper objectMapper;
 
 	private WebClient appleApiClient() {
 		return WebClient.builder()
@@ -59,11 +70,25 @@ public class AppleClient implements OAuthClient {
 			.retrieve()
 			.onStatus(HttpStatus::isError, setResponseBodyInException())
 			.bodyToMono(AppleTokenAuthResponse.class)
-			.timeout(Duration.ofSeconds(5))
+			.timeout(Duration.ofSeconds(20))
 			.flux()
 			.toStream()
 			.findFirst()
 			.map(this::convertTokenInfo)
+			.orElseThrow(() -> new IllegalArgumentException("fail getTokenInfo"));
+	}
+
+	public ApplePublicKeyResponse getPublicKey() {
+		return this.appleApiClient()
+			.get()
+			.uri("/auth/keys")
+			.retrieve()
+			.onStatus(HttpStatus::isError, setResponseBodyInException())
+			.bodyToMono(ApplePublicKeyResponse.class)
+			.timeout(Duration.ofSeconds(20))
+			.flux()
+			.toStream()
+			.findFirst()
 			.orElseThrow(() -> new IllegalArgumentException("fail getTokenInfo"));
 	}
 
@@ -97,14 +122,34 @@ public class AppleClient implements OAuthClient {
 
 	public TokenInfo convertTokenInfo(AppleTokenAuthResponse appleTokenAuthResponse) {
 		log.info("AppleTokenAuthResponse : {}", appleTokenAuthResponse);
-		String tokenId = appleTokenAuthResponse.getIdToken();
+		try {
+			String tokenId = appleTokenAuthResponse.getIdToken();
 
-		String id = Jwts.parser()
-			.parseClaimsJws(tokenId)
-			.getBody()
-			.get("email", String.class);
+			String headerOfIdentityToken = tokenId.substring(0, tokenId.indexOf("."));
+			Map<String, String> header = this.objectMapper.readValue(new String(Base64.getDecoder().decode(headerOfIdentityToken), StandardCharsets.UTF_8), new TypeReference<>() {});
+			ApplePublicKeyResponse.Key key = this.getPublicKey().getMatchedKeyBy(header.get("kid"), header.get("alg"))
+				.orElseThrow(() -> new NullPointerException("Failed get public key from apple's id server."));
 
-		return new TokenInfo(id);
+			byte[] nBytes = Base64.getUrlDecoder().decode(key.getN());
+			byte[] eBytes = Base64.getUrlDecoder().decode(key.getE());
+
+			BigInteger n = new BigInteger(1, nBytes);
+			BigInteger e = new BigInteger(1, eBytes);
+
+			RSAPublicKeySpec publicKeySpec = new RSAPublicKeySpec(n, e);
+			KeyFactory keyFactory = KeyFactory.getInstance(key.getKty());
+			PublicKey publicKey = keyFactory.generatePublic(publicKeySpec);
+
+			String id = Jwts.parser()
+				.setSigningKey(publicKey)
+				.parseClaimsJws(tokenId)
+				.getBody()
+				.get("email", String.class);
+
+			return new TokenInfo(id);
+		} catch (Exception noSuchAlgorithmException) {
+			throw new OAuthClientException("애플 로그인 실패");
+		}
 	}
 
 	private Function<ClientResponse, Mono<? extends Throwable>> setResponseBodyInException() {
