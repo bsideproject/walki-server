@@ -5,6 +5,7 @@ import java.util.List;
 
 import org.springframework.stereotype.Service;
 
+import bside.palmtree.config.LoggingParam;
 import bside.palmtree.domain.challenge.Challenge;
 import bside.palmtree.domain.challenge.ChallengeRepository;
 import bside.palmtree.domain.challenge.report.Report;
@@ -15,6 +16,7 @@ import lombok.RequiredArgsConstructor;
 /**
  * Created by YHH on 2021/04/08
  */
+@LoggingParam
 @RequiredArgsConstructor
 @Service
 public class ReportService {

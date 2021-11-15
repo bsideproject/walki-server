@@ -5,6 +5,7 @@ import java.util.Optional;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 
+import bside.palmtree.config.LoggingParam;
 import bside.palmtree.domain.coach.Coach;
 import bside.palmtree.domain.coach.CoachRepository;
 import bside.palmtree.domain.member.Member;
@@ -12,6 +13,7 @@ import bside.palmtree.domain.membercoach.MemberCoach;
 import bside.palmtree.domain.membercoach.MemberCoachRepository;
 import lombok.RequiredArgsConstructor;
 
+@LoggingParam
 @Service
 @RequiredArgsConstructor
 public class MemberCoachService {

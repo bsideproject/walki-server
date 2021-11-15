@@ -3,6 +3,7 @@ package bside.palmtree.service.auth;
 import org.springframework.stereotype.Service;
 
 import bside.palmtree.config.AuthorizationJwtProvider;
+import bside.palmtree.config.LoggingParam;
 import bside.palmtree.domain.member.Member;
 import bside.palmtree.domain.member.MemberRepository;
 import bside.palmtree.domain.member.Social;
@@ -15,6 +16,7 @@ import lombok.RequiredArgsConstructor;
 /**
  * Created by YHH on 2021/04/02
  */
+@LoggingParam
 @RequiredArgsConstructor
 @Service
 public class AuthorizationService {

@@ -8,6 +8,7 @@ import javax.persistence.EntityManager;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 
+import bside.palmtree.config.LoggingParam;
 import bside.palmtree.domain.challenge.Challenge;
 import bside.palmtree.domain.challenge.ChallengeRepository;
 import bside.palmtree.domain.challenge.ranking.ChallengeRanking;
@@ -19,6 +20,7 @@ import lombok.RequiredArgsConstructor;
 /**
  * Created by YHH on 2021/04/13
  */
+@LoggingParam
 @RequiredArgsConstructor
 @Service
 public class RankingService {
