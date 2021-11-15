@@ -3,6 +3,7 @@ package bside.palmtree.service.member;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 
+import bside.palmtree.config.LoggingParam;
 import bside.palmtree.domain.member.Member;
 import bside.palmtree.domain.member.MemberDetail;
 import bside.palmtree.domain.member.MemberRepository;
@@ -12,6 +13,7 @@ import lombok.RequiredArgsConstructor;
 /**
  * Created by YHH on 2021/02/14
  */
+@LoggingParam
 @RequiredArgsConstructor
 @Service
 @Transactional

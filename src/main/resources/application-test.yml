@@ -2,10 +2,8 @@ server:
   port: 8080
 
 spring:
-
   jpa:
     show-sql: true
-
   h2:
     console:
       enabled: true
@@ -20,3 +18,5 @@ graphql:
     gui:
       enabled: true
 
+logging:
+  config: classpath:logback-dev.xml

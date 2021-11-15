@@ -8,6 +8,9 @@ spring:
     hibernate:
       ddl-auto: validate
 
+logging:
+  config: classpath:logback-prod.xml
+
 walki:
   kakao:
     app-id: 646531
