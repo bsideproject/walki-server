@@ -2,6 +2,7 @@ package bside.palmtree.interfaces.graphql.auth;
 
 import javax.validation.constraints.NotNull;
 
+import org.modelmapper.ModelMapper;
 import org.springframework.stereotype.Service;
 
 import bside.palmtree.config.LoggedIn;
@@ -24,6 +25,7 @@ import lombok.extern.slf4j.Slf4j;
 @GraphQLApi
 public class AuthorizationServiceFacade {
 	private final AuthorizationService authorizationService;
+	private final ModelMapper modelMapper;
 
 	@GraphQLQuery(name = "signIn")
 	public SignInResult signIn(@NotNull Social social, @NotNull String token) {
@@ -41,5 +43,14 @@ public class AuthorizationServiceFacade {
 	public Boolean signUp(@NotNull Social social, @NotNull String token) {
 
 		return this.authorizationService.signUp(social, token);
+	}
+
+	@GraphQLQuery(name = "getAccessToken")
+	public AccessToken getAccessToken(@NotNull Social social, @NotNull String token) {
+
+		return this.modelMapper.map(
+			this.authorizationService.getAccessToken(social, token),
+			AccessToken.class
+		);
 	}
 }
