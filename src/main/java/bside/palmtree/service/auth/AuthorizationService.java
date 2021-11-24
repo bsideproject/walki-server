@@ -1,5 +1,7 @@
 package bside.palmtree.service.auth;
 
+import java.util.Optional;
+
 import org.springframework.stereotype.Service;
 
 import bside.palmtree.config.AuthorizationJwtProvider;
@@ -9,6 +11,7 @@ import bside.palmtree.domain.member.MemberRepository;
 import bside.palmtree.domain.member.Social;
 import bside.palmtree.external.oauth.OAuthService;
 import bside.palmtree.external.oauth.dto.TokenInfo;
+import bside.palmtree.service.auth.dto.AccessToken;
 import bside.palmtree.service.member.MemberService;
 import bside.palmtree.service.member.dto.MemberDetailDto;
 import lombok.RequiredArgsConstructor;
@@ -62,5 +65,39 @@ public class AuthorizationService {
 	public String refreshToken(Member member) {
 
 		return this.authorizationJwtProvider.createToken(member, null);
+	}
+
+	public AccessToken getAccessToken(Social social, String token) {
+		TokenInfo tokenInfo = this.oAuthService.getTokenInfo(social, token);
+
+		Optional<Member> maybeMember = this.memberRepository.findBySocialAndSocialId(social, tokenInfo.getId());
+		Member member = getMember(social, tokenInfo, maybeMember);
+
+		String accessToken = this.authorizationJwtProvider.createToken(member, null);
+
+		return AccessToken.builder()
+			.isNew(maybeMember.isEmpty())
+			.accessToken(accessToken)
+			.build();
+	}
+
+	private Member getMember(Social social, TokenInfo tokenInfo, Optional<Member> maybeMember) {
+		if (maybeMember.isEmpty()) {
+			Member member = Member.builder()
+				.social(social)
+				.socialId(tokenInfo.getId())
+				.name(tokenInfo.getNickname())
+				.profileImage(tokenInfo.getProfileImage())
+				.build();
+
+			return this.memberRepository.save(member);
+		} else {
+			// 로그인 시 유저 프로필 업데이트
+			MemberDetailDto memberDetailDto = MemberDetailDto.builder()
+				.profileImage(tokenInfo.getProfileImage())
+				.build();
+
+			return this.memberService.save(maybeMember.get(), memberDetailDto);
+		}
 	}
 }
