@@ -1,6 +1,8 @@
 package bside.palmtree.config;
 
 import java.time.LocalDate;
+import java.time.ZoneId;
+import java.time.ZonedDateTime;
 
 import org.springframework.context.annotation.Configuration;
 import org.springframework.scheduling.annotation.EnableScheduling;
@@ -15,8 +17,8 @@ import lombok.RequiredArgsConstructor;
 public class ScheduleConfig {
 	private final RankingService rankingService;
 
-	@Scheduled(cron = "* * 0 * * *")
+	@Scheduled(cron = "* * 0 * * *", zone = "Asia/Seoul")
 	public void dailySchedule() {
-		this.rankingService.createRankings(LocalDate.now());
+		this.rankingService.createRankings(ZonedDateTime.now(ZoneId.of("Asia/Seoul")).toLocalDate());
 	}
 }

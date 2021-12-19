@@ -1,7 +1,6 @@
 package bside.palmtree.interfaces.graphql.ranking;
 
-import java.time.LocalDate;
-
+import bside.palmtree.interfaces.graphql.challenge.Challenge;
 import bside.palmtree.interfaces.graphql.member.Member;
 import io.leangen.graphql.annotations.types.GraphQLType;
 import lombok.Builder;
@@ -14,17 +13,16 @@ import lombok.ToString;
 @Getter
 @Setter
 @ToString
-@GraphQLType(name = "Ranking",
-	fieldOrder = {"member", "number", "challengeDate"})
+@GraphQLType(name = "Ranking", fieldOrder = {"member", "challenge", "number"})
 public class Ranking {
 	private Member member;
+	private Challenge challenge;
 	private Long number;
-	private LocalDate challengeDate;
 
 	@Builder
-	public Ranking(Member member, Long number, LocalDate challengeDate) {
+	public Ranking(Member member, Challenge challenge, Long number) {
 		this.member = member;
+		this.challenge = challenge;
 		this.number = number;
-		this.challengeDate = challengeDate;
 	}
 }

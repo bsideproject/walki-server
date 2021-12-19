@@ -12,6 +12,7 @@ import org.springframework.stereotype.Service;
 
 import bside.palmtree.config.LoggedIn;
 import bside.palmtree.domain.membercoach.MemberCoach;
+import bside.palmtree.interfaces.graphql.challenge.Challenge;
 import bside.palmtree.interfaces.graphql.coach.Coach;
 import bside.palmtree.interfaces.graphql.member.Member;
 import bside.palmtree.service.membercoach.MemberCoachService;
@@ -49,7 +50,7 @@ public class RankingServiceFacade {
 			.map(ranking -> Ranking.builder()
 				.member(convertMember(ranking.getMember()))
 				.number(ranking.getNumber())
-				.challengeDate(ranking.getChallengeDate())
+				.challenge(this.modelMapper.map(ranking.getChallenge(), Challenge.class))
 				.build())
 			.collect(Collectors.toList());
 	}
@@ -64,7 +65,7 @@ public class RankingServiceFacade {
 			.map(ranking -> Ranking.builder()
 				.member(convertMember(ranking.getMember()))
 				.number(ranking.getNumber())
-				.challengeDate(ranking.getChallengeDate())
+				.challenge(this.modelMapper.map(ranking.getChallenge(), Challenge.class))
 				.build())
 			.collect(Collectors.toList());
 	}
