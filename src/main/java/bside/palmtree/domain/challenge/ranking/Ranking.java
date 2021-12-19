@@ -12,6 +12,7 @@ import javax.persistence.JoinColumn;
 import javax.persistence.ManyToOne;
 import javax.persistence.Table;
 import javax.persistence.UniqueConstraint;
+import javax.validation.constraints.Min;
 
 import bside.palmtree.domain.challenge.Challenge;
 import bside.palmtree.domain.common.BaseTimeEntity;
@@ -42,21 +43,27 @@ public class Ranking extends BaseTimeEntity {
 	@JoinColumn(name = "member_id", nullable = false)
 	private Member member;
 
+	@ManyToOne(fetch = FetchType.EAGER)
+	@JoinColumn(name = "challenge_id", nullable = false)
+	private Challenge challenge;
+
 	@Column(name = "ranking_number", nullable = false)
 	private Long number;
 
-	public Ranking(LocalDate challengeDate, Member member, Long number) {
+	public Ranking(LocalDate challengeDate, Challenge challenge, Member member, Long number) {
 		this.challengeDate = challengeDate;
 		this.member = member;
 		this.number = number;
-	}
-
-	public static Ranking from(Member member, LocalDate date, Long number) {
-		return new Ranking(date, member, number);
+		this.challenge = challenge;
 	}
 
 	public static Ranking from(Challenge challenge, Long number) {
 
-		return new Ranking(challenge.getChallengeDate(), Member.builder().id(challenge.getMemberId()).build(), number);
+		return new Ranking(
+			challenge.getChallengeDate(),
+			challenge,
+			Member.builder().id(challenge.getMemberId()).build(),
+			number
+		);
 	}
 }
