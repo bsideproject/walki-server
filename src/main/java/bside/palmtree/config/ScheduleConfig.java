@@ -1,6 +1,5 @@
 package bside.palmtree.config;
 
-import java.time.LocalDate;
 import java.time.ZoneId;
 import java.time.ZonedDateTime;
 
@@ -19,6 +18,6 @@ public class ScheduleConfig {
 
 	@Scheduled(cron = "* * 0 * * *", zone = "Asia/Seoul")
 	public void dailySchedule() {
-		this.rankingService.createRankings(ZonedDateTime.now(ZoneId.of("Asia/Seoul")).toLocalDate());
+		this.rankingService.createRankings(ZonedDateTime.now(ZoneId.of("Asia/Seoul")).toLocalDate().minusDays(1));
 	}
 }
