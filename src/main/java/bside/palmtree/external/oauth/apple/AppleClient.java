@@ -2,7 +2,6 @@ package bside.palmtree.external.oauth.apple;
 
 import java.math.BigInteger;
 import java.nio.charset.StandardCharsets;
-import java.nio.file.Files;
 import java.security.KeyFactory;
 import java.security.PrivateKey;
 import java.security.PublicKey;
@@ -14,6 +13,7 @@ import java.util.Date;
 import java.util.Map;
 import java.util.function.Function;
 
+import org.apache.commons.io.IOUtils;
 import org.springframework.core.io.ClassPathResource;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.MediaType;
@@ -34,7 +34,6 @@ import bside.palmtree.external.oauth.dto.TokenInfo;
 import bside.palmtree.external.oauth.exception.OAuthClientException;
 import io.jsonwebtoken.Jwts;
 import io.jsonwebtoken.SignatureAlgorithm;
-import io.jsonwebtoken.impl.DefaultJwtParser;
 import lombok.RequiredArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
 import reactor.core.publisher.Mono;
@@ -107,7 +106,10 @@ public class AppleClient implements OAuthClient {
 
 	private PrivateKey getPrivateKey() {
 		try {
-			String key = Files.readString(new ClassPathResource(appleClientProperties.getKeyPath()).getFile().toPath());
+			String key = IOUtils.toString(
+				new ClassPathResource(appleClientProperties.getKeyPath()).getInputStream(),
+				StandardCharsets.UTF_8
+			);
 			key = key.replaceFirst("-----BEGIN PRIVATE KEY-----", "");
 			key = key.replaceFirst("-----END PRIVATE KEY-----", "");
 			key = key.replaceAll("\\s", "");
@@ -126,7 +128,10 @@ public class AppleClient implements OAuthClient {
 			String tokenId = appleTokenAuthResponse.getIdToken();
 
 			String headerOfIdentityToken = tokenId.substring(0, tokenId.indexOf("."));
-			Map<String, String> header = this.objectMapper.readValue(new String(Base64.getDecoder().decode(headerOfIdentityToken), StandardCharsets.UTF_8), new TypeReference<>() {});
+			Map<String, String> header = this.objectMapper.readValue(
+				new String(Base64.getDecoder().decode(headerOfIdentityToken), StandardCharsets.UTF_8),
+				new TypeReference<>() {
+				});
 			ApplePublicKeyResponse.Key key = this.getPublicKey().getMatchedKeyBy(header.get("kid"), header.get("alg"))
 				.orElseThrow(() -> new NullPointerException("Failed get public key from apple's id server."));
 
