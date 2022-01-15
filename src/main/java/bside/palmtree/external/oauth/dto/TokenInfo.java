@@ -22,8 +22,9 @@ public class TokenInfo {
 	private Properties properties;
 
 	@Builder
-	public TokenInfo(String id) {
+	public TokenInfo(String id, Properties properties) {
 		this.id = id;
+		this.properties = properties;
 	}
 
 	@NoArgsConstructor
@@ -39,6 +40,13 @@ public class TokenInfo {
 
 		@JsonProperty("profile_image")
 		private String profileImage;
+
+		@Builder
+		public Properties(String nickname, String thumbnailImage, String profileImage) {
+			this.nickname = nickname;
+			this.thumbnailImage = thumbnailImage;
+			this.profileImage = profileImage;
+		}
 	}
 
 	public String getNickname() {

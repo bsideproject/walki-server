@@ -32,6 +32,7 @@ import bside.palmtree.config.AuthorizationException;
 import bside.palmtree.external.oauth.OAuthClient;
 import bside.palmtree.external.oauth.dto.TokenInfo;
 import bside.palmtree.external.oauth.exception.OAuthClientException;
+import io.jsonwebtoken.Claims;
 import io.jsonwebtoken.Jwts;
 import io.jsonwebtoken.SignatureAlgorithm;
 import lombok.RequiredArgsConstructor;
@@ -145,13 +146,17 @@ public class AppleClient implements OAuthClient {
 			KeyFactory keyFactory = KeyFactory.getInstance(key.getKty());
 			PublicKey publicKey = keyFactory.generatePublic(publicKeySpec);
 
-			String id = Jwts.parser()
+			Claims claims = Jwts.parser()
 				.setSigningKey(publicKey)
 				.parseClaimsJws(tokenId)
-				.getBody()
-				.get("email", String.class);
+				.getBody();
 
-			return new TokenInfo(id);
+			return TokenInfo.builder()
+				.id(claims.get("email", String.class))
+				.properties(TokenInfo.Properties.builder()
+					.nickname(claims.get("givenName", String.class))
+					.build())
+				.build();
 		} catch (Exception noSuchAlgorithmException) {
 			throw new OAuthClientException("애플 로그인 실패");
 		}
